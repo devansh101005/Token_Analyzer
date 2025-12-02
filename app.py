@@ -73,9 +73,9 @@ MODEL_CONFIG = {
 #st.caption(f"Tokenizer used: `{model_info['tokenizer']}`")
 
 
-st.set_page_config(page_title="GPT Token Analyzer", layout="wide")
+st.set_page_config(page_title="LLMs Token Analyzer", layout="wide")
 
-st.title("GPT Token Analyzer")
+st.title("LLMs Token Analyzer")
 
 # Text input
 text = st.text_area("Enter your text", height=200)
