@@ -1,5 +1,6 @@
 import streamlit as st
 import tiktoken
+import helper
 
 MODEL_CONFIG = {
     # ======================
@@ -78,7 +79,7 @@ st.set_page_config(page_title="LLMs Token Analyzer", layout="wide")
 st.title("LLMs Token Analyzer")
 
 # Text input
-text = st.text_area("Enter your text", height=200)
+text = st.text_area("Enter your text", height=250)
 
 st.subheader("Prompt Playground")
 
@@ -106,22 +107,6 @@ if not combined_prompt.strip():
     combined_prompt = text  # fallback to old text box
 
 input_text = combined_prompt
-
-
-def estimate_tokens(text: str) -> int:
-    # industry standard heuristic
-    return max(1, len(text) // 4)
-
-def get_tokenizer(model_info):
-    tokenizer = model_info.get("tokenizer")
-
-    # If tokenizer is a known encoding name
-    if tokenizer in ["cl100k_base", "p50k_base", "r50k_base"]:
-        return tiktoken.get_encoding(tokenizer)
-
-    # Otherwise treat it as model name
-    return tiktoken.encoding_for_model(tokenizer)
-
 
 
 # Model selector
@@ -152,13 +137,13 @@ if st.button("Analyze"):
         # decoded = enc.decode(tokens)
         if model_info["exact_tokens"]:
             #enc = tiktoken.encoding_for_model(model_info["tokenizer"])
-            enc = get_tokenizer(model_info)
+            enc = helper.get_tokenizer(model_info)
             tokens = enc.encode(input_text)
             token_count = len(tokens)
         else:
             tokens = None
-            token_count = estimate_tokens(input_text)
-            st.warning("⚠ Token count is an estimate for this model.")
+            token_count = helper.estimate_tokens(input_text)
+            st.warning(" Token count is an estimate for this model.")
 
 
         with st.expander("View Combined Prompt"):
